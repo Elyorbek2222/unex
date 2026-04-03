@@ -1606,6 +1606,8 @@ function AIAssistant({ locale }: { locale: Locale }) {
         : part
     );
 
+  const qIcons = ["🕐", "💰", "📍", "🛡️"];
+
   return (
     <>
       {/* Floating button */}
@@ -1613,73 +1615,153 @@ function AIAssistant({ locale }: { locale: Locale }) {
         onClick={() => setOpen(v => !v)}
         style={{
           position: "fixed", bottom: "28px", right: "28px", zIndex: 9999,
-          width: "60px", height: "60px", borderRadius: "50%",
-          background: "#E31E24",
-          boxShadow: "0 8px 28px rgba(227,30,36,0.45)",
+          width: "58px", height: "58px", borderRadius: "50%",
+          background: "linear-gradient(135deg, #E31E24 0%, #B71519 100%)",
+          boxShadow: "0 8px 24px rgba(227,30,36,0.5)",
           display: "flex", alignItems: "center", justifyContent: "center",
           border: "none", cursor: "pointer",
           animation: open ? "none" : "pulseRed 2.5s ease-in-out infinite",
+          transition: "transform 0.2s ease",
         }}
+        onMouseOver={e => (e.currentTarget as HTMLElement).style.transform = "scale(1.08)"}
+        onMouseOut={e => (e.currentTarget as HTMLElement).style.transform = "scale(1)"}
         aria-label={t.ai_title}
       >
-        {open ? <X size={22} color="#fff" /> : <MessageCircle size={24} color="#fff" />}
+        <AnimatePresence mode="wait">
+          <motion.div key={open ? "close" : "open"} initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+            {open ? <X size={22} color="#fff" /> : <MessageCircle size={22} color="#fff" />}
+          </motion.div>
+        </AnimatePresence>
       </button>
 
       {/* Chat panel */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 24, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            exit={{ opacity: 0, y: 16, scale: 0.96 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              position: "fixed", bottom: "100px", right: "28px", zIndex: 9998,
-              width: "min(380px, calc(100vw - 40px))",
-              borderRadius: "20px", overflow: "hidden",
-              boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
+              position: "fixed", bottom: "98px", right: "20px", zIndex: 9998,
+              width: "min(360px, calc(100vw - 32px))",
+              borderRadius: "24px", overflow: "hidden",
+              boxShadow: "0 32px 80px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.05)",
               background: "#fff",
               display: "flex", flexDirection: "column",
-              maxHeight: "560px",
+              maxHeight: "580px",
             }}
           >
-            {/* Header */}
-            <div style={{ background: "#E31E24", padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Zap size={15} color="#fff" style={{ fill: "#fff" }} />
+            {/* Header — gradient + avatar rasm */}
+            <div style={{
+              background: "linear-gradient(135deg, #E31E24 0%, #c41119 100%)",
+              padding: "18px 16px 20px",
+              position: "relative", overflow: "hidden",
+            }}>
+              {/* Dekorativ doiralar */}
+              <div style={{ position: "absolute", top: "-20px", right: "-20px", width: "100px", height: "100px", borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
+              <div style={{ position: "absolute", bottom: "-30px", left: "40px", width: "80px", height: "80px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
+
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  {/* Avatar — logo rasmi */}
+                  <div style={{
+                    width: "46px", height: "46px", borderRadius: "14px",
+                    background: "#fff",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                    overflow: "hidden", flexShrink: 0,
+                  }}>
+                    <Image src="/logo-red-bg.png" alt="UNEX" width={40} height={40} style={{ width: "36px", height: "36px", objectFit: "contain" }} />
+                  </div>
+                  <div>
+                    <p style={{ color: "#fff", fontWeight: 700, fontSize: "15px", lineHeight: 1.25, letterSpacing: "-0.01em" }}>{t.ai_title}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "5px", marginTop: "3px" }}>
+                      <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#4ade80", display: "inline-block", boxShadow: "0 0 0 2px rgba(74,222,128,0.3)" }} />
+                      <span style={{ color: "rgba(255,255,255,0.75)", fontSize: "11px", fontWeight: 500 }}>
+                        {locale === "uz" ? "Onlayn · 30 daqiqada javob" : "Онлайн · ответит за 30 мин"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p style={{ color: "#fff", fontWeight: 700, fontSize: "13px", lineHeight: 1.2 }}>{t.ai_title}</p>
-                  <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "11px" }}>UNEX Express</p>
-                </div>
+                <button
+                  onClick={() => setOpen(false)}
+                  style={{ background: "rgba(255,255,255,0.15)", border: "none", cursor: "pointer", width: "30px", height: "30px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.15s" }}
+                  onMouseOver={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.25)"}
+                  onMouseOut={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.15)"}
+                >
+                  <X size={15} color="#fff" />
+                </button>
               </div>
-              <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.7)", padding: "4px" }}>
-                <X size={17} />
-              </button>
             </div>
 
             {/* Quick questions */}
-            <div style={{ padding: "10px 14px", borderBottom: "1px solid rgba(26,26,26,0.07)", background: "#F8F9FA" }}>
-              <p style={{ fontSize: "10px", color: "rgba(26,26,26,0.4)", fontWeight: 600, marginBottom: "7px", textTransform: "uppercase", letterSpacing: "0.06em" }}>{t.ai_hint}</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+            <div style={{ padding: "14px 14px 10px", background: "#FAFAFA", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+              <p style={{ fontSize: "10px", color: "#999", fontWeight: 700, marginBottom: "9px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                {t.ai_hint}
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
                 {(t.ai_questions as readonly string[]).map((q, i) => (
                   <button
                     key={i}
                     onClick={() => handleQuestion(q, (t.ai_answers as readonly string[])[i])}
-                    style={{ background: "#fff", border: "1.5px solid rgba(227,30,36,0.18)", borderRadius: "9px", padding: "7px 11px", fontSize: "12px", fontWeight: 500, color: "#1A1A1A", cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}
-                    onMouseOver={e => { (e.currentTarget as HTMLElement).style.borderColor = "#E31E24"; (e.currentTarget as HTMLElement).style.background = "#FFF5F5"; }}
-                    onMouseOut={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(227,30,36,0.18)"; (e.currentTarget as HTMLElement).style.background = "#fff"; }}
-                  >{q}</button>
+                    style={{
+                      background: "#fff",
+                      border: "1.5px solid #EAEAEA",
+                      borderRadius: "12px",
+                      padding: "9px 10px",
+                      fontSize: "11.5px",
+                      fontWeight: 500,
+                      color: "#1A1A1A",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      transition: "all 0.15s",
+                      lineHeight: 1.4,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "3px",
+                    }}
+                    onMouseOver={e => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "#E31E24";
+                      el.style.background = "#FFF5F5";
+                      el.style.transform = "translateY(-1px)";
+                    }}
+                    onMouseOut={e => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "#EAEAEA";
+                      el.style.background = "#fff";
+                      el.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <span style={{ fontSize: "16px", lineHeight: 1 }}>{qIcons[i]}</span>
+                    <span>{q}</span>
+                  </button>
                 ))}
               </div>
             </div>
 
             {/* Messages */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "14px", display: "flex", flexDirection: "column", gap: "9px", minHeight: "100px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: "14px 14px 10px", display: "flex", flexDirection: "column", gap: "10px", minHeight: "110px", background: "#fff" }}>
               {messages.map((msg, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: msg.from === "user" ? "flex-end" : "flex-start" }}>
-                  <div style={{ maxWidth: "85%", padding: "9px 13px", borderRadius: msg.from === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px", background: msg.from === "user" ? "#E31E24" : "#F8F9FA", color: msg.from === "user" ? "#fff" : "#1A1A1A", fontSize: "13px", lineHeight: 1.55 }}>
+                <div key={i} style={{ display: "flex", alignItems: "flex-end", gap: "7px", justifyContent: msg.from === "user" ? "flex-end" : "flex-start" }}>
+                  {msg.from === "ai" && (
+                    <div style={{ width: "26px", height: "26px", borderRadius: "8px", background: "#E31E24", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+                      <Image src="/logo-red-bg.png" alt="" width={24} height={24} style={{ width: "22px", height: "22px", objectFit: "contain", filter: "brightness(10)" }} />
+                    </div>
+                  )}
+                  <div style={{
+                    maxWidth: "80%",
+                    padding: "10px 13px",
+                    borderRadius: msg.from === "user" ? "18px 18px 4px 18px" : "4px 18px 18px 18px",
+                    background: msg.from === "user"
+                      ? "linear-gradient(135deg, #E31E24, #c41119)"
+                      : "#F4F4F5",
+                    color: msg.from === "user" ? "#fff" : "#1A1A1A",
+                    fontSize: "13px",
+                    lineHeight: 1.6,
+                    boxShadow: msg.from === "user" ? "0 2px 8px rgba(227,30,36,0.25)" : "none",
+                  }}>
                     {renderText(msg.text)}
                   </div>
                 </div>
@@ -1687,16 +1769,34 @@ function AIAssistant({ locale }: { locale: Locale }) {
             </div>
 
             {/* Input */}
-            <div style={{ padding: "10px 14px", borderTop: "1px solid rgba(26,26,26,0.07)", display: "flex", gap: "8px" }}>
+            <div style={{ padding: "10px 12px 12px", background: "#fff", borderTop: "1px solid rgba(0,0,0,0.06)", display: "flex", gap: "8px", alignItems: "center" }}>
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleSend()}
                 placeholder={t.ai_placeholder}
-                style={{ flex: 1, border: "1.5px solid rgba(26,26,26,0.12)", borderRadius: "10px", padding: "8px 12px", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
+                style={{
+                  flex: 1, border: "1.5px solid #E8E8E8", borderRadius: "14px",
+                  padding: "10px 14px", fontSize: "13px", outline: "none",
+                  fontFamily: "inherit", background: "#FAFAFA", color: "#1A1A1A",
+                  transition: "border-color 0.15s",
+                }}
+                onFocus={e => (e.target as HTMLInputElement).style.borderColor = "#E31E24"}
+                onBlur={e => (e.target as HTMLInputElement).style.borderColor = "#E8E8E8"}
               />
-              <button onClick={handleSend} style={{ width: "38px", height: "38px", borderRadius: "10px", background: "#E31E24", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }} aria-label={t.ai_send}>
-                <Send size={14} color="#fff" />
+              <button
+                onClick={handleSend}
+                style={{
+                  width: "40px", height: "40px", borderRadius: "12px",
+                  background: input.trim() ? "linear-gradient(135deg, #E31E24, #c41119)" : "#EAEAEA",
+                  border: "none", cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0, transition: "all 0.15s",
+                  boxShadow: input.trim() ? "0 4px 12px rgba(227,30,36,0.35)" : "none",
+                }}
+                aria-label={t.ai_send}
+              >
+                <Send size={15} color={input.trim() ? "#fff" : "#bbb"} />
               </button>
             </div>
           </motion.div>
