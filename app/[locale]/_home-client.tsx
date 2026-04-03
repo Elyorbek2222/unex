@@ -480,7 +480,6 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
           muted
           playsInline
           preload="auto"
-          poster="/van-boxes.jpg"
           src="/van-animation.mp4"
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           aria-hidden="true"
