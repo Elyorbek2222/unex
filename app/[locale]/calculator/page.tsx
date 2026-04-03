@@ -851,7 +851,8 @@ function DeliveryTimesTab({ locale }: { locale: Locale }) {
 ══════════════════════════════════════════════════ */
 export default function CalculatorPage() {
   const params = useParams();
-  const locale = (params?.locale as Locale) ?? "uz";
+  const raw = params?.locale as string;
+  const locale: Locale = raw === "ru" ? "ru" : "uz";
   const t = T[locale];
   const [activeTab, setActiveTab] = useState<string>("calc");
   const [modeForTable, setModeForTable] = useState<DeliveryMode>("standard");

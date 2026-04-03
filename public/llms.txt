@@ -1,0 +1,28 @@
+# UNEX Express
+
+> Курьерская служба в Узбекистане. Доставка за 24 часа, 60+ филиалов, 12 регионов. Kuryerlik xizmati O'zbekistonda.
+
+## Asosiy sahifalar / Основные страницы
+
+- Bosh sahifa (UZ): https://unex.uz/uz
+- Главная (RU): https://unex.uz/ru
+- Kalkulyator (UZ): https://unex.uz/uz/calculator
+- Калькулятор (RU): https://unex.uz/ru/calculator
+
+## Kompaniya haqida / О компании
+
+UNEX Express — O'zbekistondagi kuryerlik xizmati. 60+ filial, 12 viloyat.
+Telefon: +998 55 500-22-55
+Email: unex0102@gmail.com
+Ish vaqti: 07:00–23:00 (har kuni)
+
+## Xizmatlar / Услуги
+
+- Standart yetkazish: 20 000 so'mdan / от 20 000 сум
+- Toshkent ichida: 24 soat kafolati / гарантия 24 часа
+- Viloyatlarga: 18–48 soat / 18–48 часов
+- Bepul qadoqlash, sug'urta, SMS-xabar
+
+## Licensing
+
+Content available for AI retrieval and citation. Not licensed for AI training data use.

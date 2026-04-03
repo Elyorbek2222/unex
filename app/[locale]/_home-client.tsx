@@ -472,7 +472,7 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
   const textY = progress * -50;
 
   return (
-    <div ref={containerRef} style={{ height: "260vh", position: "relative" }} aria-labelledby="hero-heading">
+    <div ref={containerRef} style={{ height: "260vh", position: "relative" }} aria-labelledby="scroll-hero-heading">
       <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
         {/* Scroll-scrubbed van animation */}
         <video
@@ -480,6 +480,7 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
           muted
           playsInline
           preload="auto"
+          poster="/van-boxes.jpg"
           src="/van-animation.mp4"
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           aria-hidden="true"
@@ -517,7 +518,7 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
           </p>
 
           <h1
-            id="hero-heading"
+            id="scroll-hero-heading"
             style={{
               fontFamily: "Playfair Display, serif",
               fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
