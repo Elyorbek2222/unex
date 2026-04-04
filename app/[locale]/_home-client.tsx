@@ -451,6 +451,28 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
+  // iOS Safari: force video to start loading (ignores preload="auto" by default)
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (vid) vid.load();
+  }, []);
+
+  // iOS Safari: once metadata is ready, apply current scroll position immediately
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    const onMeta = () => {
+      const el = containerRef.current;
+      if (!el || !isFinite(vid.duration) || !vid.duration) return;
+      const rect = el.getBoundingClientRect();
+      const scrollable = el.offsetHeight - window.innerHeight;
+      const p = Math.min(1, Math.max(0, -rect.top / scrollable));
+      vid.currentTime = p * vid.duration;
+    };
+    vid.addEventListener("loadedmetadata", onMeta);
+    return () => vid.removeEventListener("loadedmetadata", onMeta);
+  }, []);
+
   useEffect(() => {
     const onScroll = () => {
       const el = containerRef.current;
@@ -460,7 +482,7 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
       const p = Math.min(1, Math.max(0, -rect.top / scrollable));
       setProgress(p);
       const vid = videoRef.current;
-      if (vid && vid.readyState >= 2 && vid.duration) {
+      if (vid && vid.readyState >= 1 && isFinite(vid.duration) && vid.duration) {
         vid.currentTime = p * vid.duration;
       }
     };
@@ -473,7 +495,7 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
 
   return (
     <div ref={containerRef} style={{ height: "260vh", position: "relative" }} aria-labelledby="scroll-hero-heading">
-      <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
+      <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden", background: "#C0C0C0" }}>
         {/* Scroll-scrubbed van animation */}
         <video
           ref={videoRef}
@@ -483,6 +505,8 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
           src="/van-animation.mp4"
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           aria-hidden="true"
+          // @ts-ignore
+          fetchpriority="high"
         />
 
         {/* Gradient overlay */}
