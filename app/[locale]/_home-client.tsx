@@ -450,14 +450,6 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check, { passive: true });
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   // iOS Safari: force video to start loading (ignores preload="auto" by default)
   useEffect(() => {
@@ -502,8 +494,8 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
   const textY = progress * -50;
 
   return (
-    <div ref={containerRef} style={{ height: isMobile ? "180vh" : "260vh", position: "relative" }} aria-labelledby="scroll-hero-heading">
-      <div style={{ position: "sticky", top: 0, height: isMobile ? "55vh" : "100vh", overflow: "hidden", background: "#C0C0C0" }}>
+    <div ref={containerRef} className="scroll-hero-container" style={{ position: "relative" }} aria-labelledby="scroll-hero-heading">
+      <div className="scroll-hero-sticky" style={{ position: "sticky", top: 0, overflow: "hidden", background: "#C0C0C0" }}>
         {/* Scroll-scrubbed van animation */}
         <video
           ref={videoRef}
@@ -528,11 +520,11 @@ function ScrollVideoHero({ locale }: { locale: Locale }) {
 
         {/* Hero text — fades + lifts as you scroll */}
         <div
+          className="scroll-hero-text-pad"
           style={{
             position: "absolute", inset: 0,
             display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center",
-            padding: isMobile ? "60px 16px 0" : "80px 20px 0",
             textAlign: "center",
             opacity: textOpacity,
             transform: `translateY(${textY}px)`,

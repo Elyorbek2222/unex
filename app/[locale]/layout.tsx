@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "@/app/globals.css";
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  display: "optional",
+  variable: "--font-inter",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
+  display: "optional",
+  variable: "--font-playfair",
+});
 
 export async function generateMetadata({
   params,
@@ -39,7 +54,7 @@ export default async function LocaleLayout({
   const lang = locale === "ru" ? "ru" : "uz";
 
   return (
-    <html lang={lang} className="h-full antialiased">
+    <html lang={lang} className={`h-full antialiased ${inter.variable} ${playfair.variable}`}>
       <body className="min-h-full flex flex-col bg-white">
         {children}
         <Analytics />
