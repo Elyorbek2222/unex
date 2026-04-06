@@ -4,10 +4,7 @@ import type { NextRequest } from 'next/server'
 const locales = ['uz', 'ru', 'en']
 const defaultLocale = 'uz'
 
-function getLocale(request: NextRequest): string {
-  const acceptLanguage = request.headers.get('accept-language') ?? ''
-  const preferred = acceptLanguage.split(',')[0]?.split('-')[0]?.toLowerCase()
-  if (preferred && locales.includes(preferred)) return preferred
+function getLocale(_request: NextRequest): string {
   return defaultLocale
 }
 
